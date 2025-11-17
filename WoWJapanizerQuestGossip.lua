@@ -62,7 +62,7 @@ function WoWJapanizerQuestGossip:QuestInfo(event)
         self:ShowComplete(index.questID)
     end
 
-    if self.WoWJapanizer_Quest_Version == "unknown" and IsAddOnLoaded("WoWJapanizer_Quest") then
+    if self.WoWJapanizer_Quest_Version == "unknown" and C_AddOns.IsAddOnLoaded("WoWJapanizer_Quest") then
         self.WoWJapanizer_Quest_Version = WoWJapanizer.property.quest.version
         local obj = _G[self.base .. "DataFrameText"]
         obj:SetFormattedText(self.QUEST_DATA_INFO_TEMPLATE, self.WoWJapanizer_Quest_Version)

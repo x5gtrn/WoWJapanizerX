@@ -204,14 +204,13 @@ function WoWJapanizer_Quest:GetMagicData(text)
 end
 
 function WoWJapanizer_Quest:GetID_QuestLog(title)
-    local numEntries = GetNumQuestLogEntries()
-    local questLogTitleText, _, isHeader, id, questID = 0
+    local numEntries = C_QuestLog.GetNumQuestLogEntries()
+    local questID = 0
 
     for i=1, numEntries do
-        questLogTitleText, _, _, _, isHeader, _, _, _, id = GetQuestLogTitle(i)
-
-        if not isHeader and title == questLogTitleText then
-            questID = id
+        local info = C_QuestLog.GetInfo(i)
+        if info and not info.isHeader and title == info.title then
+            questID = info.questID
             break
         end
     end
