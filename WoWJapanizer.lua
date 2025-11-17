@@ -8,9 +8,9 @@ WoWJapanizer.property = {}
 function WoWJapanizer:OnInitialize()
     self.debug = WoWJapanizer.DEBUG
     self.version = C_AddOns.GetAddOnMetadata("WoWJapanizer", "Version")
-    print(string.format("Welcome to WoWJapanizer Ver: %s.\nSetting is /cj or /WoWJapanizer.", self.version))
+    print(string.format("Welcome to WoWJapanizerX Ver: %s.\nSetting is /wjp or /WoWJapanizerX.", self.version))
 
-    self.db = LibStub('AceDB-3.0'):New("WoWJapanizerDB")
+    self.db = LibStub('AceDB-3.0'):New("WoWJapanizerXDB")
 	self.db:RegisterDefaults({
         profile = {
             quest       = { questlog = true, gossip = true, questlog_movable = false, furigana = false },
@@ -100,7 +100,7 @@ function WoWJapanizer:SetupOptions()
     function GetOptions()
         return {
             type = "group",
-            name = "WoWJapanizer",
+            name = "WoWJapanizerX",
 			order = 1,
             args = {         
 				Header1 = {
@@ -189,8 +189,8 @@ function WoWJapanizer:SetupOptions()
     LibStub("AceConfig-3.0"):RegisterOptionsTable("WoWJapanizer", GetOptions())	
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions("WoWJapanizer");
 
-    self:RegisterChatCommand("cj", "ChatCommand")
-    self:RegisterChatCommand("WoWJapanizer", "ChatCommand")
+    self:RegisterChatCommand("wjp", "ChatCommand")
+    self:RegisterChatCommand("WoWJapanizerX", "ChatCommand")
 end
 
 function WoWJapanizer:ChatCommand(input)
