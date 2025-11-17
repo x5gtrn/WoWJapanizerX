@@ -1,7 +1,7 @@
 WoWJapanizer = LibStub("AceAddon-3.0"):NewAddon("WoWJapanizer", "AceConsole-3.0")
 
 WoWJapanizer.FONT = "Interface\\AddOns\\WoWJapanizer\\font\\ipagui.ttf";
-WoWJapanizer.DEBUG = false
+WoWJapanizer.DEBUG = false;
 
 WoWJapanizer.property = {}
 
