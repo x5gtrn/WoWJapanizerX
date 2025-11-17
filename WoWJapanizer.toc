@@ -1,21 +1,14 @@
 ## Interface: 110205
-## Title: WoWJapanizer
+## Title: WoWJapanizerX
 ## Notes: Translate Quest data, Item ToolTips and Spell ToolTips into Japanese text.
 ## Version: 5.0.0
 ## Author: milai
 ## OptionalDeps: Ace3, LibStub, CallbackHandler
-## SavedVariables: WoWJapanizerDB
+## SavedVariables: WoWJapanizerXDB
 ## X-Min-Interface: 110205
-## X-Curse-Project-Name: WoWJapanizer
-## X-Curse-Project-ID: WoWJapanizer
-## X-Curse-Packaged-Version: v4.04
-## X-Curse-Project-Name: WoWJapanizer
-## X-Curse-Project-ID: wowjapanizer
-## X-Curse-Repository-ID: wow/wowjapanizer/mainline
-## X-Curse-Packaged-Version: v4.19
-## X-Curse-Project-Name: WoWJapanizer
-## X-Curse-Project-ID: wowjapanizer
-## X-Curse-Repository-ID: wow/wowjapanizer/mainline
+## X-Curse-Project-Name: WoWJapanizerX
+## X-Curse-Project-ID: wowjapanizerx
+## X-Curse-Repository-ID: wow/wowjapanizerx/mainline
 
 
 embeds.xml
