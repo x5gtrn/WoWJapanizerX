@@ -24,7 +24,7 @@ function WoWJapanizerQuestLog:OnEnable()
 
     self:SetMovable(WoWJapanizer.db.profile.quest.questlog_movable)
 
-    if IsAddOnLoaded("Carbonite") then
+    if C_AddOns.IsAddOnLoaded("Carbonite") then
 		self:OnEnableCarbonite()
         return
     end
@@ -76,17 +76,23 @@ function WoWJapanizerQuestLog:QuestInfo()
         return
     end
 
-    local index = GetQuestLogSelection()
-
-	local title, level, suggestedGroup, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, isOnMap, hasLocalPOI, isTask, isStory = GetQuestLogTitle(index)
-
-	WoWJapanizer:DebugLog("WoWJapanizerQuestLog:QuestInfo: " .. questID)
-  
-    if isHeader then
+    local index = C_QuestLog.GetSelectedQuest()
+    if not index then
         return
     end
 
-    self:ShowDefault(questID)
+	local info = C_QuestLog.GetInfo(index)
+	if not info then
+	    return
+	end
+
+	WoWJapanizer:DebugLog("WoWJapanizerQuestLog:QuestInfo: " .. info.questID)
+
+    if info.isHeader then
+        return
+    end
+
+    self:ShowDefault(info.questID)
 
     if QuestNPCModel:IsShown() then
         local point, relativeTo, relativePoint, xOffset, yOffset = QuestNPCModel:GetPoint(1) 
@@ -104,8 +110,8 @@ function WoWJapanizerQuestLog:OnClickShowJapanese()
 end
 
 function WoWJapanizerQuestLog:IsOldQuestGuru()
-    if IsAddOnLoaded("QuestGuru") then
-        local version = GetAddOnMetadata("QuestGuru", "Version")
+    if C_AddOns.IsAddOnLoaded("QuestGuru") then
+        local version = C_AddOns.GetAddOnMetadata("QuestGuru", "Version")
 
         if string.match(version, "^[01]") then
             return true

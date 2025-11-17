@@ -53,51 +53,69 @@ end
 function WoWJapanizerToolTip:Enable()
     WoWJapanizer:DebugLog(self.base .. ":Enable");
 
-	self.Tooltip:HookScript("OnTooltipSetItem", function(tooltip)
-		local name, link = tooltip:GetItem()
+	-- Store self reference for closures
+	local tooltipObj = self
 
+	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tooltip, data)
+		if tooltip ~= tooltipObj.Tooltip then
+			return
+		end
+
+		local name, link = tooltip:GetItem()
 		if not link then
 			return
 		end
 
 		local _, _, itemID = link:find("Hitem:(%d+):")
-		self:DebugPrint('ITEM', itemID, name, self.Tooltip)
+		if not itemID then
+			return
+		end
+
+		tooltipObj:DebugPrint('ITEM', itemID, name, tooltipObj.Tooltip)
 
 		if WoWJapanizer.db.profile.item.tooltip then
-			item = WoWJapanizer_Item:Get(itemID)
+			local item = WoWJapanizer_Item:Get(itemID)
 			if item then
-				self.selected.type  = self.TOOLTIP_ITEM
-				self:AddText(item.text)
+				tooltipObj.selected.type = tooltipObj.TOOLTIP_ITEM
+				tooltipObj:AddText(item.text)
 			end
 		end
 
-		self:DeveloperText("ItemID", itemID)
+		tooltipObj:DeveloperText("ItemID", itemID)
 	end)
 
-	self.Tooltip:HookScript("OnTooltipSetSpell", function(tooltip)
-		local spellName, spellRank, spellID =  tooltip:GetSpell()
-		self:DebugPrint('SPELL', spellID, spellName, self.Tooltip)
+	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Spell, function(tooltip, data)
+		if tooltip ~= tooltipObj.Tooltip then
+			return
+		end
+
+		local spellName, spellRank, spellID = tooltip:GetSpell()
+		if not spellID then
+			return
+		end
+
+		tooltipObj:DebugPrint('SPELL', spellID, spellName, tooltipObj.Tooltip)
 
 		if WoWJapanizer.db.profile.spell.tooltip then
-			if not self:CheckEnhancedTooltips() then
-				self:AddText(WoWJapanizer.L.NotEnhancedTooltips)
+			if not tooltipObj:CheckEnhancedTooltips() then
+				tooltipObj:AddText(WoWJapanizer.L.NotEnhancedTooltips)
 				return
 			end
 
-			spell = WoWJapanizer_Spell:GetTooltipText(spellID, self.Tooltip)
+			local spell = WoWJapanizer_Spell:GetTooltipText(spellID, tooltipObj.Tooltip)
 			if spell then
-				self.selected.type  = self.TOOLTIP_SPELL
+				tooltipObj.selected.type = tooltipObj.TOOLTIP_SPELL
 				if spell.next == nil then
-					self:AddText(spell.text)
+					tooltipObj:AddText(spell.text)
 				else
-					self:AddText(spell.text .. "\n|cffffffff" .. WoWJapanizer.L["NextRank"] .. "|r\n" .. spell.next)
+					tooltipObj:AddText(spell.text .. "\n|cffffffff" .. WoWJapanizer.L["NextRank"] .. "|r\n" .. spell.next)
 				end
 			end
 		end
 
-		self:DeveloperText("SpellID", spellID)
+		tooltipObj:DeveloperText("SpellID", spellID)
 	end)
-	
+
 end
 
 function WoWJapanizerToolTip:AddText(text)

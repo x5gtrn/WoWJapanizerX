@@ -1,38 +1,36 @@
 WoWJapanizer = LibStub("AceAddon-3.0"):NewAddon("WoWJapanizer", "AceConsole-3.0")
 
 WoWJapanizer.FONT = "Interface\\AddOns\\WoWJapanizer\\font\\ipagui.ttf";
-WoWJapanizer.DEBUG = false -- false when release
+WoWJapanizer.DEBUG = false
 
 WoWJapanizer.property = {}
 
 function WoWJapanizer:OnInitialize()
-    self.version = GetAddOnMetadata("WoWJapanizer", "Version")
+    self.debug = WoWJapanizer.DEBUG
+    self.version = C_AddOns.GetAddOnMetadata("WoWJapanizer", "Version")
     print(string.format("Welcome to WoWJapanizer Ver: %s.\nSetting is /cj or /WoWJapanizer.", self.version))
 
     self.db = LibStub('AceDB-3.0'):New("WoWJapanizerDB")
 	self.db:RegisterDefaults({
         profile = {
-            quest       = { questlog = true, worldmap = true, gossip = true, questlog_movable = false, furigana = false },
+            quest       = { questlog = true, gossip = true, questlog_movable = false, furigana = false },
             item        = { tooltip = true },
-            spell       = { tooltip = true, buff = true },
+            spell       = { tooltip = true },
             achievement = { tooltip = true, advice = true },
-            developer   = self.DEBUG, -- false when release
-            development = { debugger = self.DEBUG }, -- false when release
+            developer   = self.DEBUG,
+            development = { debugger = self.DEBUG },
 			config      = {fontsize = 0, tooltip = true},
         }
     })
 
     -- Quest --
     WoWJapanizerQuestLog:OnInitialize()
-    WoWJapanizerWorldMapQuest:OnInitialize()
     WoWJapanizerQuestGossip:OnInitialize()
 
     -- ToolTip --
     WoWJapanizerGameToolTip:OnInitialize()
     WoWJapanizerItemRefTooltip:OnInitialize()
 
-    WoWJapanizerBuffToolTip:OnInitialize()
-    WoWJapanizerGlyphToolTip:OnInitialize()
     WoWJapanizerGarrisonToolTip:OnInitialize()
 
 end
@@ -45,18 +43,12 @@ function WoWJapanizer:OnEnable()
 
     -- Quest --
     WoWJapanizerQuestLog:OnEnable()
-    WoWJapanizerWorldMapQuest:OnEnable()
     WoWJapanizerQuestGossip:OnEnable()
 
     -- ToolTip --
     WoWJapanizerGameToolTip:OnEnable()
     WoWJapanizerItemRefTooltip:OnEnable()
 
-	-- Buff	
-    WoWJapanizerBuffToolTip:OnEnable()
-	-- Glyph
-    WoWJapanizerGlyphToolTip:OnEnable()
-	
 	WoWJapanizerGarrisonToolTip:OnEnable()
 
 end
@@ -66,19 +58,12 @@ function WoWJapanizer:OnDisable()
 
     -- Quest --
     WoWJapanizerQuestLog:OnDisable()
-    WoWJapanizerWorldMapQuest:OnDisable()
     WoWJapanizerQuestGossip:OnDisable()
 
     -- ToolTip --
     WoWJapanizerGameToolTip:OnDisable()
     WoWJapanizerItemRefTooltip:OnDisable()
 
-	-- Buff	
-    WoWJapanizerBuffToolTip:OnDisable()
-
-	-- Glyph
-    WoWJapanizerGlyphToolTip:OnDisable()
-	
 	WoWJapanizerGarrisonToolTip:OnDisable()
 
 end

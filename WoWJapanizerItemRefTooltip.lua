@@ -4,12 +4,21 @@ WoWJapanizerItemRefTooltip.Tooltip = ItemRefTooltip
 function WoWJapanizerItemRefTooltip:OnInitialize()
     self:Initialize()
 
-    self.Tooltip:HookScript("OnTooltipSetQuest", function(tooltip)
-        self:OnQuest()
+    -- Store self reference for closures
+    local tooltipObj = self
+
+    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Quest, function(tooltip, data)
+        if tooltip ~= tooltipObj.Tooltip then
+            return
+        end
+        tooltipObj:OnQuest()
     end)
 
-    self.Tooltip:HookScript("OnTooltipSetAchievement", function(tooltip)
-        self:OnAchievement()
+    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Achievement, function(tooltip, data)
+        if tooltip ~= tooltipObj.Tooltip then
+            return
+        end
+        tooltipObj:OnAchievement()
     end)
 end
 
