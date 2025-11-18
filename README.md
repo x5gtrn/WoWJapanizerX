@@ -67,7 +67,7 @@ Available options:
 
 ## Version History
 
-### 5.0.0 (Current)
+### 5.0.1
 - Complete rewrite for WoW 11.x (The War Within)
 - New integrated Map & Quest Log UI support
 - Migrated to modern WoW APIs (C_QuestLog, C_AddOns, TooltipDataProcessor)
