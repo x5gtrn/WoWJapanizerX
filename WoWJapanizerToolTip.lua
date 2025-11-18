@@ -17,17 +17,17 @@ function WoWJapanizerToolTip:New(base)
 end
 
 function WoWJapanizerToolTip:OnInitialize()
-    WoWJapanizer:DebugLog(self.base .. ":OnInitialize");
+    WoWJapanizerX:DebugLog(self.base .. ":OnInitialize");
     self:Initialize()
 end
 
 function WoWJapanizerToolTip:OnEnable()
-    WoWJapanizer:DebugLog(self.base .. ":OnEnable");
+    WoWJapanizerX:DebugLog(self.base .. ":OnEnable");
     self:Enable()
 end
 
 function WoWJapanizerToolTip:OnDisable()
-    WoWJapanizer:DebugLog(self.base .. ":OnDisable");
+    WoWJapanizerX:DebugLog(self.base .. ":OnDisable");
 end
 
 function WoWJapanizerToolTip:Initialize()
@@ -51,7 +51,7 @@ function WoWJapanizerToolTip:Initialize()
 end
 
 function WoWJapanizerToolTip:Enable()
-    WoWJapanizer:DebugLog(self.base .. ":Enable");
+    WoWJapanizerX:DebugLog(self.base .. ":Enable");
 
 	-- Store self reference for closures
 	local tooltipObj = self
@@ -73,7 +73,7 @@ function WoWJapanizerToolTip:Enable()
 
 		tooltipObj:DebugPrint('ITEM', itemID, name, tooltipObj.Tooltip)
 
-		if WoWJapanizer.db.profile.item.tooltip then
+		if WoWJapanizerX.db.profile.item.tooltip then
 			local item = WoWJapanizer_Item:Get(itemID)
 			if item then
 				tooltipObj.selected.type = tooltipObj.TOOLTIP_ITEM
@@ -96,9 +96,9 @@ function WoWJapanizerToolTip:Enable()
 
 		tooltipObj:DebugPrint('SPELL', spellID, spellName, tooltipObj.Tooltip)
 
-		if WoWJapanizer.db.profile.spell.tooltip then
+		if WoWJapanizerX.db.profile.spell.tooltip then
 			if not tooltipObj:CheckEnhancedTooltips() then
-				tooltipObj:AddText(WoWJapanizer.L.NotEnhancedTooltips)
+				tooltipObj:AddText(WoWJapanizerX.L.NotEnhancedTooltips)
 				return
 			end
 
@@ -108,7 +108,7 @@ function WoWJapanizerToolTip:Enable()
 				if spell.next == nil then
 					tooltipObj:AddText(spell.text)
 				else
-					tooltipObj:AddText(spell.text .. "\n|cffffffff" .. WoWJapanizer.L["NextRank"] .. "|r\n" .. spell.next)
+					tooltipObj:AddText(spell.text .. "\n|cffffffff" .. WoWJapanizerX.L["NextRank"] .. "|r\n" .. spell.next)
 				end
 			end
 		end
@@ -141,7 +141,7 @@ function WoWJapanizerToolTip:AddText(text)
         ["Size"]       = fontHeight,
     }
 
-    target:SetFont(WoWJapanizer.FONT, 12 + WoWJapanizer:FontSize())
+    target:SetFont(WoWJapanizerX.FONT, 12 + WoWJapanizerX:FontSize())
 
 	--    target:SetTextColor(1, 0.4, 0, 1)
 end
@@ -152,7 +152,7 @@ function WoWJapanizerToolTip:DeveloperText(text, id)
 		return
 	end
 
-    if WoWJapanizer.db.profile.developer then
+    if WoWJapanizerX.db.profile.developer then
         if not self:AddCheck(self.developer) then
             return
         end

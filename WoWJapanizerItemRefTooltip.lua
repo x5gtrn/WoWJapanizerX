@@ -114,7 +114,7 @@ function WoWJapanizerItemRefTooltip:OnQuest()
 end
 
 function WoWJapanizerItemRefTooltip:OnAchievement()
-    if not WoWJapanizer.db.profile.achievement.tooltip then return end
+    if not WoWJapanizerX.db.profile.achievement.tooltip then return end
 
     local achievementID = WoWJapanizer_Achievement:GetID_ItemRefTooltip(self.Tooltip)
 

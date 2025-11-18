@@ -10,15 +10,15 @@ function WoWJapanizerQuest:New(base)
 end
 
 function WoWJapanizerQuest:OnInitialize()
-    WoWJapanizer:DebugLog("WoWJapanizerQuest: OnInitialize.");
+    WoWJapanizerX:DebugLog("WoWJapanizerQuest: OnInitialize.");
 end
 
 function WoWJapanizerQuest:OnEnable()
-    WoWJapanizer:DebugLog("WoWJapanizerQuest: OnEnable.");
+    WoWJapanizerX:DebugLog("WoWJapanizerQuest: OnEnable.");
 end
 
 function WoWJapanizerQuest:OnDisable()
-    WoWJapanizer:DebugLog("WoWJapanizerQuest: OnDisable.");
+    WoWJapanizerX:DebugLog("WoWJapanizerQuest: OnDisable.");
 end
 
 function WoWJapanizerQuest:Initialize()
@@ -30,19 +30,19 @@ function WoWJapanizerQuest:Initialize()
     for i=1, self.TEXT_MAX do
         obj = "Title" .. tostring(i)
         self[obj] = _G[base .. obj]
-        self[obj]:SetFont(WoWJapanizer.FONT, 14 +  WoWJapanizer:FontSize())
+        self[obj]:SetFont(WoWJapanizerX.FONT, 14 +  WoWJapanizerX:FontSize())
 
         obj = "Text" .. tostring(i)
         self[obj] = _G[base .. obj]
-        self[obj]:SetFont(WoWJapanizer.FONT, 12 +  WoWJapanizer:FontSize())
+        self[obj]:SetFont(WoWJapanizerX.FONT, 12 +  WoWJapanizerX:FontSize())
 	end
 end
 
 function WoWJapanizerQuest:LoadAddOn()
-    if not WoWJapanizer:LoadAddOn("WoWJapanizer_Quest") then
+    if not WoWJapanizerX:LoadAddOn("WoWJapanizer_Quest") then
         return {
             ["error"] = true,
-            ["text"]  = WoWJapanizer.L["ErrorAddonQuest"],
+            ["text"]  = WoWJapanizerX.L["ErrorAddonQuest"],
         }
     end
 
@@ -63,7 +63,7 @@ function WoWJapanizerQuest:Get(questID)
     if not quest then
         return {
             ["error"] = true,
-            ["text"]  = WoWJapanizer.L["UnknownQuest"] .. "\n\n" .. 'QuestID:' .. tostring(questID),
+            ["text"]  = WoWJapanizerX.L["UnknownQuest"] .. "\n\n" .. 'QuestID:' .. tostring(questID),
         }
     end
 	
@@ -81,22 +81,22 @@ function WoWJapanizerQuest:Get(questID)
         return str
     end
 
-    local status = quest.status == '1' and WoWJapanizer.L["WikiTranslation"] or WoWJapanizer.L["ExciteTranslation"]
+    local status = quest.status == '1' and WoWJapanizerX.L["WikiTranslation"] or WoWJapanizerX.L["ExciteTranslation"]
     local translator = string.gsub(quest.translator, "  ", "\n    ")
 
     local translation = ""
     if translator ~= "" then
-        translation = WoWJapanizer.L["Translator"] .. "\n    " .. translator .. "\n\n"
+        translation = WoWJapanizerX.L["Translator"] .. "\n    " .. translator .. "\n\n"
     end
 
     return {
-        ["title"]       = WoWJapanizer.L["BracketLeft"] .. quest.title .. WoWJapanizer.L["BracketRight"],
+        ["title"]       = WoWJapanizerX.L["BracketLeft"] .. quest.title .. WoWJapanizerX.L["BracketRight"],
         ["objective"]   = convert(quest.objective),
         ["description"] = convert(quest.description),
         ["completion"]  = convert(quest.completion),
         ["translation"] = translation,
 
-        --["translation"] = translation .. WoWJapanizer.L["Source"] .. "\n    " .. status,
+        --["translation"] = translation .. WoWJapanizerX.L["Source"] .. "\n    " .. status,
     }
 end
 
@@ -209,7 +209,7 @@ function WoWJapanizerQuest:Show(questID, list, isOnMap)
 		bar:SetValue(0)
 	end
 	
-	WoWJapanizer:DebugLog(quest["description"]);
+	WoWJapanizerX:DebugLog(quest["description"]);
 
     if not self.Frame:IsShown() then
 		self.Frame:Show()
@@ -220,9 +220,9 @@ function WoWJapanizerQuest:ShowDefault(questID)
     self:Show(questID, {
         { type = 1, empty = false, target = "title",       text = "" },
         { type = 2, empty = true,  target = "objective",   text = "" },
-        { type = 1, empty = false, target = "",            text = WoWJapanizer.L["Description"] },
+        { type = 1, empty = false, target = "",            text = WoWJapanizerX.L["Description"] },
         { type = 2, empty = true,  target = "description", text = "" },
-        { type = 1, empty = false, target = "",            text = WoWJapanizer.L["Translation"] },
+        { type = 1, empty = false, target = "",            text = WoWJapanizerX.L["Translation"] },
         { type = 2, empty = true,  target = "translation", text = "" },
     }, false)
 end
@@ -231,9 +231,9 @@ function WoWJapanizerQuest:ShowOnMap(questID)
     self:Show(questID, {
         { type = 1, empty = false, target = "title",       text = "" },
         { type = 2, empty = true,  target = "objective",   text = "" },
-        { type = 1, empty = false, target = "",            text = WoWJapanizer.L["Description"] },
+        { type = 1, empty = false, target = "",            text = WoWJapanizerX.L["Description"] },
         { type = 2, empty = true,  target = "description", text = "" },
-        { type = 1, empty = false, target = "",            text = WoWJapanizer.L["Translation"] },
+        { type = 1, empty = false, target = "",            text = WoWJapanizerX.L["Translation"] },
         { type = 2, empty = true,  target = "translation", text = "" },
     }, true)
 end
@@ -243,7 +243,7 @@ end
 function WoWJapanizerQuest:Error(message)
     self:Clear()
 
-    self.Title1:SetText(WoWJapanizer.L["BracketLeft"] .. WoWJapanizer.L["Error"] .. WoWJapanizer.L["BracketRight"])
+    self.Title1:SetText(WoWJapanizerX.L["BracketLeft"] .. WoWJapanizerX.L["Error"] .. WoWJapanizerX.L["BracketRight"])
     self:SetAdjustText(self.Text1, message)
 
     self:Layout(4, {

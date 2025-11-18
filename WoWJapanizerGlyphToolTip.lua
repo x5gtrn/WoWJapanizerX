@@ -15,8 +15,8 @@ function WoWJapanizerGlyphToolTip:OnEnable()
 
 --				local name, glyphType, isKnown, icon, glyphID = GetGlyphInfo(_button.glyphIndex)
 
---				if not WoWJapanizer.db.profile.spell.tooltip then return end
---				if not WoWJapanizer:LoadAddOn("WoWJapanizer_Spell") then return end
+--				if not WoWJapanizerX.db.profile.spell.tooltip then return end
+--				if not WoWJapanizerX:LoadAddOn("WoWJapanizer_Spell") then return end
 
 --				local spell = WoWJapanizer_Spell:GetGlyphByName(name)
 --
@@ -32,8 +32,8 @@ function WoWJapanizerGlyphToolTip:OnEnable()
 --			local enabled, glyphType, glyphTooltipIndex, glyphSpell, icon = GetGlyphSocketInfo(_button:GetID())
 --
 --			if not glyphSpell then return end
---			if not WoWJapanizer.db.profile.spell.tooltip then return end
---			if not WoWJapanizer:LoadAddOn("WoWJapanizer_Spell") then return end
+--			if not WoWJapanizerX.db.profile.spell.tooltip then return end
+--			if not WoWJapanizerX:LoadAddOn("WoWJapanizer_Spell") then return end
 
 --			local spell = WoWJapanizer_Spell:Get(glyphSpell)
 --
@@ -47,7 +47,7 @@ function WoWJapanizerGlyphToolTip:OnEnable()
 end
 
 function WoWJapanizerGlyphToolTip:OnShow(spell, glyphID)
---    if not WoWJapanizer.db.profile.spell.tooltip then return end
+--    if not WoWJapanizerX.db.profile.spell.tooltip then return end
 
 --    local w = GameTooltip:GetWidth()
 --    self.Tooltip:SetOwner(GameTooltip, "ANCHOR_BOTTOMLEFT", w, 0)
