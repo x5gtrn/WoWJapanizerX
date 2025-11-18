@@ -7,9 +7,9 @@ A World of Warcraft addon that translates game content (Quests, Items, Spells, A
 WoWJapanizerX is a modernized version of the original WoWJapanizer addon, updated to support World of Warcraft 11.x (The War Within expansion) and later versions. This addon provides Japanese translations for:
 
 - **Quest Log**: Quest titles, descriptions, objectives, progress, and completion text
-- ~~**Item Tooltips**: Item names and descriptions~~ WIP
-- ~~**Spell Tooltips**: Spell names and descriptions~~ WIP
-- ~~**Achievement Tooltips**: Achievement names and descriptions~~ WIP
+- ~~**Item Tooltips**: Item names and descriptions~~ _WIP_
+- ~~**Spell Tooltips**: Spell names and descriptions~~ _WIP_
+- ~~**Achievement Tooltips**: Achievement names and descriptions~~ _WIP_
 
 ## Features
 
@@ -143,9 +143,9 @@ Settings are saved per-character in `WoWJapanizerXDB` (separate from original Wo
 We would like to express our deepest gratitude and respect to the following individuals and communities who made this addon possible:
 
 ### Addon Authors
-- **[milai](https://x.com/milai_wow)** - Maintained WoWJapanizer up to v4.19, bringing Japanese translations to countless players
-- **[midoridge](https://x.com/midoridge)** - Created CraftJapanizer, the predecessor that laid the foundation for WoWJapanizer
-- **[lalha](https://x.com/lalha2)** - Developed QuestJapanizer, the very first Japanese localization addon in World of Warcraft history
+- **[milai](https://x.com/milai_wow)** - Maintained [WoWJapanizer](https://www.curseforge.com/wow/addons/wowjapanizer) up to v4.19, bringing Japanese translations to countless players
+- **[midoridge](https://x.com/midoridge)** - Created [CraftJapanizer](https://legacy.curseforge.com/wow/addons/CraftJapanizer), the predecessor that laid the foundation for WoWJapanizer
+- **[lalha](https://x.com/lalha2)** - Developed [QuestJapanizer](https://legacy.curseforge.com/wow/addons/qjp), the very first Japanese localization addon in World of Warcraft history
 
 ### Special Thanks
 [See Readme.txt](./Readme.txt)
