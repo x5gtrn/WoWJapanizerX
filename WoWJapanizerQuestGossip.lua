@@ -4,7 +4,7 @@ WoWJapanizerQuestGossip.QUEST_DATA_INFO_TEMPLATE = "QuestData: |cffffffff%s|r"
 
 function WoWJapanizerQuestGossip:OnInitialize()
     local obj = _G[self.base .. "TitleText"]
-    obj:SetText("WoWJapanizer ("  .. WoWJapanizer.version .. ")")
+    obj:SetText("WoWJapanizerX ("  .. WoWJapanizerX.version .. ")")
     obj = _G[self.base .. "DataFrameText"]
     obj:SetFormattedText(self.QUEST_DATA_INFO_TEMPLATE, "unknown")
 
@@ -29,23 +29,23 @@ function WoWJapanizerQuestGossip:OnInitialize()
 end
 
 function WoWJapanizerQuestGossip:OnEnable()
-    WoWJapanizer:DebugLog("WoWJapanizerQuestGossip: OnEnable.");
+    WoWJapanizerX:DebugLog("WoWJapanizerQuestGossip: OnEnable.");
 
     local obj = _G[self.base .. "DataFrameText"]
-    obj:SetFormattedText(self.QUEST_DATA_INFO_TEMPLATE, WoWJapanizer.version)
+    obj:SetFormattedText(self.QUEST_DATA_INFO_TEMPLATE, WoWJapanizerX.version)
 end
 
 function WoWJapanizerQuestGossip:OnDisable()
-    WoWJapanizer:DebugLog("WoWJapanizerQuestGossip: OnDisable.");
+    WoWJapanizerX:DebugLog("WoWJapanizerQuestGossip: OnDisable.");
 end
 
 function WoWJapanizerQuestGossip:QuestInfo(event)
-    if not WoWJapanizer.db.profile.quest.gossip then
+    if not WoWJapanizerX.db.profile.quest.gossip then
         self.Frame:Hide()
         return
     end
 
-    WoWJapanizer:DebugLog("WoWJapanizerQuestGossip:QuestInfo")
+    WoWJapanizerX:DebugLog("WoWJapanizerQuestGossip:QuestInfo")
 
     self:Clear()
 
@@ -63,7 +63,7 @@ function WoWJapanizerQuestGossip:QuestInfo(event)
     end
 
     if self.WoWJapanizer_Quest_Version == "unknown" and C_AddOns.IsAddOnLoaded("WoWJapanizer_Quest") then
-        self.WoWJapanizer_Quest_Version = WoWJapanizer.property.quest.version
+        self.WoWJapanizer_Quest_Version = WoWJapanizerX.property.quest.version
         local obj = _G[self.base .. "DataFrameText"]
         obj:SetFormattedText(self.QUEST_DATA_INFO_TEMPLATE, self.WoWJapanizer_Quest_Version)
     end
@@ -78,9 +78,9 @@ function WoWJapanizerQuestGossip:ShowDetail(questID)
     self:Show(questID, {
         { type = 1, empty = false, target = "title",       text = "" },
         { type = 2, empty = true,  target = "description", text = "" },
-        { type = 1, empty = false, target = "",            text = WoWJapanizer.L["Objectives"] },
+        { type = 1, empty = false, target = "",            text = WoWJapanizerX.L["Objectives"] },
         { type = 2, empty = true,  target = "objective",   text = "" },
-        { type = 1, empty = false, target = "",            text = WoWJapanizer.L["Translation"] },
+        { type = 1, empty = false, target = "",            text = WoWJapanizerX.L["Translation"] },
         { type = 2, empty = true,  target = "translation", text = "" },
     })
 end
@@ -89,7 +89,7 @@ function WoWJapanizerQuestGossip:ShowComplete(questID)
     self:Show(questID, {
         { type = 1, empty = false, target = "title",       text = "" },
         { type = 2, empty = false, target = "completion",  text = "" },
-        { type = 1, empty = false, target = "",            text = WoWJapanizer.L["Translation"] },
+        { type = 1, empty = false, target = "",            text = WoWJapanizerX.L["Translation"] },
         { type = 2, empty = true,  target = "translation", text = "" },
     })
 end

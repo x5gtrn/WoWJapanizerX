@@ -71,7 +71,7 @@ hooksecurefunc("ArtifactFrame_LoadUI", function()
 	
 		orgOnEnter(self, button)
 		
-		if WoWJapanizer.db.profile.spell.tooltip then
+		if WoWJapanizerX.db.profile.spell.tooltip then
 			spellID = self.spellID
 			spell = WoWJapanizerArtifactToolTip:GetTooltipText(spellID)
 			
@@ -90,7 +90,7 @@ hooksecurefunc("ArtifactFrame_LoadUI", function()
 					["Size"]       = fontHeight,
 				}
 
-				target:SetFont(WoWJapanizer.FONT, 12 + WoWJapanizer:FontSize())
+				target:SetFont(WoWJapanizerX.FONT, 12 + WoWJapanizerX:FontSize())
 				GameTooltip:Show()
 
 			end

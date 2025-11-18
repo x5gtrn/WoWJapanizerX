@@ -29,7 +29,7 @@ function WoWJapanizerBuffToolTip:OnEnable()
 end
 
 function WoWJapanizerBuffToolTip:OnShow(button)
-    if not WoWJapanizer.db.profile.spell.buff then return end
+    if not WoWJapanizerX.db.profile.spell.buff then return end
 
     local w = GameTooltip:GetWidth()
     self.Tooltip:SetOwner(GameTooltip, "ANCHOR_BOTTOMLEFT", w, 0)

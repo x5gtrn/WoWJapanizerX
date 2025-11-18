@@ -15,25 +15,25 @@ function WoWJapanizerQuestLog:GetDetailsFrame()
     end
 
     if not QuestMapFrame then
-        print("WoWJapanizer: QuestMapFrame not found")
+        print("WoWJapanizerX: QuestMapFrame not found")
         return nil
     end
 
     -- Try path 1: QuestMapFrame.QuestFrame.DetailsFrame
     if QuestMapFrame.QuestFrame and QuestMapFrame.QuestFrame.DetailsFrame then
-        print("WoWJapanizer: Found DetailsFrame at QuestMapFrame.QuestFrame.DetailsFrame")
+        print("WoWJapanizerX: Found DetailsFrame at QuestMapFrame.QuestFrame.DetailsFrame")
         self.detailsFrame = QuestMapFrame.QuestFrame.DetailsFrame
         return self.detailsFrame
     end
 
     -- Try path 2: QuestMapFrame.DetailsFrame (older version)
     if QuestMapFrame.DetailsFrame then
-        print("WoWJapanizer: Found DetailsFrame at QuestMapFrame.DetailsFrame")
+        print("WoWJapanizerX: Found DetailsFrame at QuestMapFrame.DetailsFrame")
         self.detailsFrame = QuestMapFrame.DetailsFrame
         return self.detailsFrame
     end
 
-    print("WoWJapanizer: DetailsFrame not found in any known location")
+    print("WoWJapanizerX: DetailsFrame not found in any known location")
     return nil
 end
 
@@ -44,13 +44,13 @@ function WoWJapanizerQuestLog:OnInitialize()
         WoWJapanizerQuestLog:OnEvent(event, ...)
     end)
 
-    self:SetChecked(WoWJapanizer.db.profile.quest.questlog)
-    print("WoWJapanizer: Quest Log initialized")
+    self:SetChecked(WoWJapanizerX.db.profile.quest.questlog)
+    print("WoWJapanizerX: Quest Log initialized")
 end
 
 function WoWJapanizerQuestLog:OnEnable()
-    WoWJapanizer:DebugLog("WoWJapanizerQuestLog: OnEnable.")
-    print("WoWJapanizer: Quest Log module enabled")
+    WoWJapanizerX:DebugLog("WoWJapanizerQuestLog: OnEnable.")
+    print("WoWJapanizerX: Quest Log module enabled")
 
     -- Try multiple hook methods for Quest selection
     -- Method 1: Hook C_QuestLog events
@@ -60,45 +60,54 @@ function WoWJapanizerQuestLog:OnEnable()
     -- Method 2: Hook QuestMapFrame_ShowQuestDetails if it exists
     if QuestMapFrame_ShowQuestDetails then
         hooksecurefunc("QuestMapFrame_ShowQuestDetails", function(questID)
-            print("WoWJapanizer: QuestMapFrame_ShowQuestDetails called with questID:", questID)
+            print("WoWJapanizerX: QuestMapFrame_ShowQuestDetails called with questID:", questID)
+            WoWJapanizerQuestLog:ShowQuestDetails(questID)
         end)
     end
 
     -- Method 3: Hook QuestMapFrame directly (only if method exists)
     if QuestMapFrame and type(QuestMapFrame.ShowQuestDetails) == "function" then
         hooksecurefunc(QuestMapFrame, "ShowQuestDetails", function(self, questID)
-            print("WoWJapanizer: QuestMapFrame:ShowQuestDetails called with questID:", questID)
+            print("WoWJapanizerX: QuestMapFrame:ShowQuestDetails called with questID:", questID)
+            WoWJapanizerQuestLog:ShowQuestDetails(questID)
         end)
     end
 
     -- Method 4: Hook C_QuestLog.SetSelectedQuest
     hooksecurefunc(C_QuestLog, "SetSelectedQuest", function(questID)
-        print("WoWJapanizer: C_QuestLog.SetSelectedQuest called with questID:", questID)
+        print("WoWJapanizerX: C_QuestLog.SetSelectedQuest called with questID:", questID)
+        -- Delay slightly to ensure Blizzard UI has updated
+        C_Timer.After(0.1, function()
+            WoWJapanizerQuestLog:ShowQuestDetails(questID)
+        end)
     end)
 
     -- Hook DetailsFrame show/hide events to detect when quest details are displayed
     C_Timer.After(1, function()
         local df = self:GetDetailsFrame()
         if df then
-            print("WoWJapanizer: Setting up DetailsFrame hooks")
+            print("WoWJapanizerX: Setting up DetailsFrame hooks")
 
             df:HookScript("OnShow", function()
-                print("WoWJapanizer: DetailsFrame shown!")
+                print("WoWJapanizerX: DetailsFrame shown!")
                 WoWJapanizerQuestLog:OnDetailsFrameShow()
             end)
 
             df:HookScript("OnHide", function()
-                print("WoWJapanizer: DetailsFrame hidden!")
+                print("WoWJapanizerX: DetailsFrame hidden!")
                 WoWJapanizerQuestLog:HideJapaneseFrame()
             end)
+
+            -- Initialize UI elements if DetailsFrame already exists
+            WoWJapanizerQuestLog:OnDetailsFrameShow()
         else
-            print("WoWJapanizer: WARNING - Could not hook DetailsFrame events")
+            print("WoWJapanizerX: WARNING - Could not hook DetailsFrame events")
         end
     end)
 end
 
 function WoWJapanizerQuestLog:OnDisable()
-    WoWJapanizer:DebugLog("WoWJapanizerQuestLog: OnDisable.")
+    WoWJapanizerX:DebugLog("WoWJapanizerQuestLog: OnDisable.")
 end
 
 function WoWJapanizerQuestLog:OnEvent(event, ...)
@@ -108,17 +117,17 @@ function WoWJapanizerQuestLog:OnEvent(event, ...)
         if df and df:IsShown() then
             local questID = C_QuestLog.GetSelectedQuest()
             if questID and questID > 0 then
-                print("WoWJapanizer: QUEST_LOG_UPDATE - Selected quest:", questID)
+                print("WoWJapanizerX: QUEST_LOG_UPDATE - Selected quest:", questID)
                 self:ShowQuestDetails(questID)
             end
         end
     elseif event == "QUEST_DETAIL" then
-        print("WoWJapanizer: QUEST_DETAIL event fired")
+        print("WoWJapanizerX: QUEST_DETAIL event fired")
     end
 end
 
 function WoWJapanizerQuestLog:OnDetailsFrameShow()
-    print("WoWJapanizer: OnDetailsFrameShow called")
+    print("WoWJapanizerX: OnDetailsFrameShow called")
 
     -- Create toggle button if it doesn't exist yet
     if not self.toggleButton then
@@ -136,24 +145,24 @@ function WoWJapanizerQuestLog:OnDetailsFrameShow()
     -- Get the currently selected quest
     local questID = C_QuestLog.GetSelectedQuest()
     if questID and questID > 0 then
-        print("WoWJapanizer: Quest detail shown for questID:", questID)
+        print("WoWJapanizerX: Quest detail shown for questID:", questID)
         self:ShowQuestDetails(questID)
     else
-        print("WoWJapanizer: No quest selected")
+        print("WoWJapanizerX: No quest selected")
     end
 end
 
 function WoWJapanizerQuestLog:CreateToggleButton()
     if self.toggleButton then
-        print("WoWJapanizer: Toggle button already exists")
+        print("WoWJapanizerX: Toggle button already exists")
         return
     end
 
-    print("WoWJapanizer: Creating toggle button...")
+    print("WoWJapanizerX: Creating toggle button...")
 
     local df = self:GetDetailsFrame()
     if not df then
-        print("WoWJapanizer: ERROR - Cannot create button, DetailsFrame not found")
+        print("WoWJapanizerX: ERROR - Cannot create button, DetailsFrame not found")
         return
     end
 
@@ -163,12 +172,12 @@ function WoWJapanizerQuestLog:CreateToggleButton()
 
     -- Try to find BackFrame and use it as parent
     if df.BackFrame then
-        print("WoWJapanizer: BackFrame found, using it as parent")
+        print("WoWJapanizerX: BackFrame found, using it as parent")
         parent = df.BackFrame
 
         -- Debug: List all children of BackFrame
         local children = {parent:GetChildren()}
-        print(string.format("WoWJapanizer: Found %d children in BackFrame", #children))
+        print(string.format("WoWJapanizerX: Found %d children in BackFrame", #children))
         for i, child in ipairs(children) do
             local name = child:GetName() or "unnamed"
             local objType = child:GetObjectType()
@@ -177,7 +186,7 @@ function WoWJapanizerQuestLog:CreateToggleButton()
 
         -- Try to anchor to the first child
         if children[1] then
-            print(string.format("WoWJapanizer: Anchoring to first child: %s", children[1]:GetName() or "unnamed"))
+            print(string.format("WoWJapanizerX: Anchoring to first child: %s", children[1]:GetName() or "unnamed"))
             local toggleBtn = CreateFrame("Button", "WoWJapanizerToggleButton", parent, "UIPanelButtonTemplate")
             toggleBtn:SetSize(110, 22)
             toggleBtn:SetPoint("LEFT", children[1], "RIGHT", 5, 0)
@@ -186,15 +195,17 @@ function WoWJapanizerQuestLog:CreateToggleButton()
                 WoWJapanizerQuestLog:ToggleJapanese()
             end)
             self.toggleButton = toggleBtn
-            print("WoWJapanizer: Toggle button created in BackFrame!")
+            print("WoWJapanizerX: Toggle button created in BackFrame!")
+            print("WoWJapanizerX: Button details - IsShown:", toggleBtn:IsShown(), "Enabled:", toggleBtn:IsEnabled())
+            toggleBtn:Show()  -- Explicitly show the button
             return
         end
     else
-        print("WoWJapanizer: BackFrame not found, using DetailsFrame as parent")
+        print("WoWJapanizerX: BackFrame not found, using DetailsFrame as parent")
 
         -- Debug: List all children of DetailsFrame
         local children = {df:GetChildren()}
-        print(string.format("WoWJapanizer: Found %d children in DetailsFrame", #children))
+        print(string.format("WoWJapanizerX: Found %d children in DetailsFrame", #children))
         for i, child in ipairs(children) do
             local name = child:GetName() or "unnamed"
             local objType = child:GetObjectType()
@@ -212,35 +223,38 @@ function WoWJapanizerQuestLog:CreateToggleButton()
     end)
 
     self.toggleButton = toggleBtn
-    print("WoWJapanizer: Toggle button created at default position!")
+    print("WoWJapanizerX: Toggle button created at default position!")
+    print("WoWJapanizerX: Button details - IsShown:", toggleBtn:IsShown(), "Enabled:", toggleBtn:IsEnabled())
+    print("WoWJapanizerX: Button size:", toggleBtn:GetWidth(), "x", toggleBtn:GetHeight())
+    toggleBtn:Show()  -- Explicitly show the button
 end
 
 function WoWJapanizerQuestLog:CreateJapaneseFrame()
     if self.japaneseFrame then
-        print("WoWJapanizer: Japanese frame already exists")
+        print("WoWJapanizerX: Japanese frame already exists")
         return
     end
 
-    print("WoWJapanizer: Attempting to create Japanese frame...")
+    print("WoWJapanizerX: Attempting to create Japanese frame...")
 
     local df = self:GetDetailsFrame()
     if not df then
-        print("WoWJapanizer: ERROR - Cannot create Japanese frame, DetailsFrame not found")
+        print("WoWJapanizerX: ERROR - Cannot create Japanese frame, DetailsFrame not found")
         return
     end
 
-    print("WoWJapanizer: DetailsFrame found, creating frame...")
+    print("WoWJapanizerX: DetailsFrame found, creating frame...")
 
     -- Create frame for Japanese translation
     local frame = CreateFrame("Frame", "WoWJapanizerQuestDetailsFrame", df)
 
     -- Try to position to the right of ScrollFrame if it exists
     if df.ScrollFrame then
-        print("WoWJapanizer: Anchoring to ScrollFrame")
+        print("WoWJapanizerX: Anchoring to ScrollFrame")
         frame:SetPoint("BOTTOMLEFT", df.ScrollFrame, "BOTTOMRIGHT", 10, 0)
         frame:SetPoint("TOPRIGHT", df, "TOPRIGHT", -10, -60)
     else
-        print("WoWJapanizer: ScrollFrame not found, using default anchors")
+        print("WoWJapanizerX: ScrollFrame not found, using default anchors")
         frame:SetPoint("TOPLEFT", df, "TOPLEFT", 10, -60)
         frame:SetPoint("BOTTOMRIGHT", df, "BOTTOMRIGHT", -10, 10)
     end
@@ -250,7 +264,7 @@ function WoWJapanizerQuestLog:CreateJapaneseFrame()
     frame:EnableMouse(false) -- do not block clicks on Blizzard UI by default
     frame:Hide()
 
-    print("WoWJapanizer: Base frame created")
+    print("WoWJapanizerX: Base frame created")
 
     -- Background
     frame.bg = frame:CreateTexture(nil, "BACKGROUND")
@@ -268,12 +282,12 @@ function WoWJapanizerQuestLog:CreateJapaneseFrame()
     scrollFrame:SetScrollChild(content)
 
     local text = content:CreateFontString(nil, "OVERLAY")
-    local fontSet = text:SetFont(WoWJapanizer.FONT, 12 + WoWJapanizer:FontSize())
+    local fontSet = text:SetFont(WoWJapanizerX.FONT, 12 + WoWJapanizerX:FontSize())
     if not fontSet then
-        print("WoWJapanizer: WARNING - Failed to set Japanese font, using default font")
-        text:SetFont("Fonts\\FRIZQT__.TTF", 12 + WoWJapanizer:FontSize())
+        print("WoWJapanizerX: WARNING - Failed to set Japanese font, using default font")
+        text:SetFont("Fonts\\FRIZQT__.TTF", 12 + WoWJapanizerX:FontSize())
     else
-        print("WoWJapanizer: Japanese font set successfully:", WoWJapanizer.FONT)
+        print("WoWJapanizerX: Japanese font set successfully:", WoWJapanizerX.FONT)
     end
 
     text:SetPoint("TOPLEFT")
@@ -290,7 +304,7 @@ function WoWJapanizerQuestLog:CreateJapaneseFrame()
     frame.text = text
 
     self.japaneseFrame = frame
-    print("WoWJapanizer: Japanese frame created successfully!")
+    print("WoWJapanizerX: Japanese frame created successfully!")
 end
 
 -- Helper: compute if two frames overlap on screen
@@ -396,37 +410,61 @@ function WoWJapanizerQuestLog:LayoutJapaneseFrame()
             -- Then recalculate height
             local textHeight = self.japaneseFrame.text:GetStringHeight()
             self.japaneseFrame.content:SetHeight(math.max(textHeight + 20, self.japaneseFrame.scrollFrame:GetHeight()))
-            print(string.format("WoWJapanizer: Layout updated - Text width: %d, height: %d", textWidth, textHeight))
+            print(string.format("WoWJapanizerX: Layout updated - Text width: %d, height: %d", textWidth, textHeight))
         end
     end)
 end
 
 function WoWJapanizerQuestLog:ShowQuestDetails(questID)
-    print("WoWJapanizer: ShowQuestDetails called with questID:", questID)
+    print("WoWJapanizerX: ShowQuestDetails called with questID:", questID)
 
     -- Only process if DetailsFrame is actually shown
     local df = self:GetDetailsFrame()
     if not df or not df:IsShown() then
-        print("WoWJapanizer: DetailsFrame is not visible, skipping")
+        print("WoWJapanizerX: DetailsFrame is not visible, skipping")
         return
     end
 
-    if not self.showJapanese or not WoWJapanizer:isShowQuest() then
-        print("WoWJapanizer: Japanese display disabled")
+    -- Ensure toggle button exists
+    if not self.toggleButton then
+        print("WoWJapanizerX: Creating toggle button on demand")
+        self:CreateToggleButton()
+    end
+
+    if not self.showJapanese or not WoWJapanizerX:isShowQuest() then
+        print("WoWJapanizerX: Japanese display disabled")
         self:HideJapaneseFrame()
         return
     end
 
     if not questID then
-        print("WoWJapanizer: No questID provided")
+        print("WoWJapanizerX: No questID provided")
         return
     end
 
-    print("WoWJapanizer: Looking up Japanese translation for quest", questID)
+    print("WoWJapanizerX: Looking up Japanese translation for quest", questID)
+
+    -- Check if WoWJapanizer_Quest module is loaded
+    if not WoWJapanizer_Quest then
+        print("WoWJapanizerX: ERROR - WoWJapanizer_Quest module not loaded!")
+        if not self.japaneseFrame then
+            self:CreateJapaneseFrame()
+        end
+        if self.japaneseFrame then
+            local msg = "エラー: WoWJapanizer_Quest データモジュールがロードされていません。\nアドオンを再インストールしてください。"
+            self.japaneseFrame.text:SetText(msg)
+            self:LayoutJapaneseFrame()
+            local textHeight = self.japaneseFrame.text:GetStringHeight()
+            self.japaneseFrame.content:SetHeight(math.max(textHeight + 20, self.japaneseFrame.scrollFrame:GetHeight()))
+            self.japaneseFrame:Show()
+            print("WoWJapanizerX: Frame should be visible now - IsShown:", self.japaneseFrame:IsShown())
+        end
+        return
+    end
 
     local quest = WoWJapanizer_Quest:Get(questID)
     if not quest then
-        print("WoWJapanizer: No Japanese translation found for quest", questID)
+        print("WoWJapanizerX: No Japanese translation found for quest", questID)
         -- Fallback: show a short message instead of hiding the frame entirely
         if not self.japaneseFrame then
             self:CreateJapaneseFrame()
@@ -438,11 +476,12 @@ function WoWJapanizerQuestLog:ShowQuestDetails(questID)
             local textHeight = self.japaneseFrame.text:GetStringHeight()
             self.japaneseFrame.content:SetHeight(math.max(textHeight + 20, self.japaneseFrame.scrollFrame:GetHeight()))
             self.japaneseFrame:Show()
+            print("WoWJapanizerX: Frame should be visible now - IsShown:", self.japaneseFrame:IsShown())
         end
         return
     end
 
-    print("WoWJapanizer: Japanese translation found!")
+    print("WoWJapanizerX: Japanese translation found!")
 
     -- Build Japanese text
     local player_name = UnitName("player")
@@ -454,7 +493,7 @@ function WoWJapanizerQuestLog:ShowQuestDetails(questID)
     -- Title
     if quest.title and quest.title ~= "" then
         japaneseText = japaneseText .. "|cFFFFD700" .. quest.title .. "|r\n\n"
-        print("WoWJapanizer: Title:", quest.title)
+        print("WoWJapanizerX: Title:", quest.title)
     end
 
     -- Objective
@@ -463,7 +502,7 @@ function WoWJapanizerQuestLog:ShowQuestDetails(questID)
         obj = string.gsub(obj, "<class>", player_class)
         obj = string.gsub(obj, "<race>", player_race)
         japaneseText = japaneseText .. "|cFFFFFFFF目的:|r\n" .. obj .. "\n\n"
-        print("WoWJapanizer: Objective:", obj)
+        print("WoWJapanizerX: Objective:", obj)
     end
 
     -- Description
@@ -472,7 +511,7 @@ function WoWJapanizerQuestLog:ShowQuestDetails(questID)
         desc = string.gsub(desc, "<class>", player_class)
         desc = string.gsub(desc, "<race>", player_race)
         japaneseText = japaneseText .. "|cFFFFFFFF説明:|r\n" .. desc .. "\n\n"
-        print("WoWJapanizer: Description:", desc)
+        print("WoWJapanizerX: Description:", desc)
     end
 
     -- Progress
@@ -481,7 +520,7 @@ function WoWJapanizerQuestLog:ShowQuestDetails(questID)
         prog = string.gsub(prog, "<class>", player_class)
         prog = string.gsub(prog, "<race>", player_race)
         japaneseText = japaneseText .. "|cFFFFFFFF進行:|r\n" .. prog .. "\n\n"
-        print("WoWJapanizer: Progress:", prog)
+        print("WoWJapanizerX: Progress:", prog)
     end
 
     -- Completion
@@ -490,29 +529,29 @@ function WoWJapanizerQuestLog:ShowQuestDetails(questID)
         comp = string.gsub(comp, "<class>", player_class)
         comp = string.gsub(comp, "<race>", player_race)
         japaneseText = japaneseText .. "|cFFFFFFFF完了:|r\n" .. comp .. "\n"
-        print("WoWJapanizer: Completion:", comp)
+        print("WoWJapanizerX: Completion:", comp)
     end
 
-    print("WoWJapanizer: Full Japanese text length:", string.len(japaneseText))
+    print("WoWJapanizerX: Full Japanese text length:", string.len(japaneseText))
 
     if japaneseText ~= "" then
         -- For now, just print to chat - no UI frame
-        print("WoWJapanizer: ========== Quest Translation ==========")
+        print("WoWJapanizerX: ========== Quest Translation ==========")
         print(japaneseText)
-        print("WoWJapanizer: =======================================")
+        print("WoWJapanizerX: =======================================")
 
         -- Create frame if it doesn't exist yet
         if not self.japaneseFrame then
-            print("WoWJapanizer: Creating Japanese frame...")
+            print("WoWJapanizerX: Creating Japanese frame...")
             self:CreateJapaneseFrame()
         end
 
         if self.japaneseFrame then
-            print("WoWJapanizer: Displaying Japanese frame")
+            print("WoWJapanizerX: Displaying Japanese frame")
 
             -- Set the text
             self.japaneseFrame.text:SetText(japaneseText)
-            print("WoWJapanizer: Text set, length:", string.len(japaneseText))
+            print("WoWJapanizerX: Text set, length:", string.len(japaneseText))
 
             -- Re-layout around any blocking UI each time we show
             self:LayoutJapaneseFrame()
@@ -529,7 +568,7 @@ function WoWJapanizerQuestLog:ShowQuestDetails(questID)
 
                     -- Now get the actual height needed
                     local textHeight = self.japaneseFrame.text:GetStringHeight()
-                    print(string.format("WoWJapanizer: Text dimensions - Width: %d, Height: %d", textWidth, textHeight))
+                    print(string.format("WoWJapanizerX: Text dimensions - Width: %d, Height: %d", textWidth, textHeight))
 
                     self.japaneseFrame.content:SetHeight(math.max(textHeight + 40, self.japaneseFrame.scrollFrame:GetHeight()))
                 end
@@ -540,7 +579,11 @@ function WoWJapanizerQuestLog:ShowQuestDetails(questID)
             self.japaneseFrame.content:SetHeight(math.max(textHeight + 20, self.japaneseFrame.scrollFrame:GetHeight()))
 
             self.japaneseFrame:Show()
-            print("WoWJapanizer: Japanese frame is now shown")
+            print("WoWJapanizerX: Japanese frame is now shown - IsShown:", self.japaneseFrame:IsShown())
+            print("WoWJapanizerX: Frame details - Width:", self.japaneseFrame:GetWidth(), "Height:", self.japaneseFrame:GetHeight())
+            print("WoWJapanizerX: Frame parent:", self.japaneseFrame:GetParent():GetName() or "unknown")
+            print("WoWJapanizerX: Frame level:", self.japaneseFrame:GetFrameLevel(), "Strata:", self.japaneseFrame:GetFrameStrata())
+
             -- While visible, re-check layout a few times in case Blizzard UI animates in
             if self._relayoutTicker then self._relayoutTicker:Cancel() end
             self._relayoutTicker = C_Timer.NewTicker(0.5, function()
@@ -552,10 +595,10 @@ function WoWJapanizerQuestLog:ShowQuestDetails(questID)
                 self:LayoutJapaneseFrame()
             end, 6) -- run a few times then stop
         else
-            print("WoWJapanizer: ERROR - Could not create Japanese frame")
+            print("WoWJapanizerX: ERROR - Could not create Japanese frame")
         end
     else
-        print("WoWJapanizer: No Japanese text to display")
+        print("WoWJapanizerX: No Japanese text to display")
         self:HideJapaneseFrame()
     end
 end
@@ -572,7 +615,7 @@ end
 
 function WoWJapanizerQuestLog:ToggleJapanese()
     self.showJapanese = not self.showJapanese
-    print("WoWJapanizer: Toggle Japanese -", self.showJapanese and "ON" or "OFF")
+    print("WoWJapanizerX: Toggle Japanese -", self.showJapanese and "ON" or "OFF")
 
     -- Update button text
     if self.toggleButton then
@@ -587,10 +630,10 @@ function WoWJapanizerQuestLog:ToggleJapanese()
         -- Refresh current quest
         local questID = C_QuestLog.GetSelectedQuest()
         if questID and questID > 0 then
-            print("WoWJapanizer: Refreshing quest", questID)
+            print("WoWJapanizerX: Refreshing quest", questID)
             self:ShowQuestDetails(questID)
         else
-            print("WoWJapanizer: No quest selected")
+            print("WoWJapanizerX: No quest selected")
         end
     else
         self:HideJapaneseFrame()

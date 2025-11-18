@@ -95,10 +95,10 @@ WoWJapanizer/
 ├── font/                      # Japanese font files
 ├── libs/                      # Embedded libraries (Ace3)
 ├── locales/                   # Localization files
-├── WoWJapanizer.lua          # Core addon file
+├── WoWJapanizerX.lua          # Core addon file
 ├── WoWJapanizerQuestLog.lua  # Quest log module
 ├── WoWJapanizerToolTip.lua   # Tooltip module
-└── WoWJapanizer.toc          # Addon metadata
+└── WoWJapanizerX.toc          # Addon metadata
 ```
 
 ### Building from Source
