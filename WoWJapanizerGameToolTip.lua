@@ -7,52 +7,74 @@ function WoWJapanizerGameToolTip:OnEnable()
 	self._achievement = false
 
 	hooksecurefunc("AchievementFrame_LoadUI", function()
-		for _, button in next, AchievementFrameAchievementsContainer.buttons do
-			button:HookScript("OnEnter", function(_button)
-				self:OnAchievement(_button)
-			end)
-			button:HookScript("OnLeave", function(_button)
-				if self.Tooltip:IsShown() then
-					self.Tooltip:Hide()
+		-- Wait for Achievement UI to fully load before hooking
+		C_Timer.After(0.5, function()
+			-- Check if AchievementFrameAchievementsContainer exists and has buttons
+			if AchievementFrameAchievementsContainer and AchievementFrameAchievementsContainer.buttons then
+				for _, button in next, AchievementFrameAchievementsContainer.buttons do
+					if button then
+						button:HookScript("OnEnter", function(_button)
+							self:OnAchievement(_button)
+						end)
+						button:HookScript("OnLeave", function(_button)
+							if self.Tooltip:IsShown() then
+								self.Tooltip:Hide()
+							end
+						end)
+					end
 				end
-			end)
-		end
+			end
 
-		for _, button in next, AchievementFrameStats.buttons do
-			button:HookScript("OnEnter", function(_button)
-				if _button.isHeader then
-					return
+			-- Check if AchievementFrameStats exists and has buttons
+			if AchievementFrameStats and AchievementFrameStats.buttons then
+				for _, button in next, AchievementFrameStats.buttons do
+					if button then
+						button:HookScript("OnEnter", function(_button)
+							if _button.isHeader then
+								return
+							end
+
+							self:OnAchievement(_button)
+						end)
+						button:HookScript("OnLeave", function(_button)
+							if self.Tooltip:IsShown() then
+								self.Tooltip:Hide()
+							end
+						end)
+					end
 				end
+			end
 
-				self:OnAchievement(_button)
-			end)
-			button:HookScript("OnLeave", function(_button)
-				if self.Tooltip:IsShown() then
-					self.Tooltip:Hide()
-				end
-			end)
-		end
-
-		AchievementFrameSummary:HookScript("OnShow", function()
-			if not self._achievement then
-				for i=1, ACHIEVEMENTUI_MAX_SUMMARY_ACHIEVEMENTS do
-					AchievementFrameSummaryAchievements.buttons[i]:HookScript("OnEnter", function(button)
-						self:OnAchievementSummary(button)
-					end)
-					AchievementFrameSummaryAchievements.buttons[i]:HookScript("OnLeave", function(button)
-						if self.Tooltip:IsShown() then
-							self.Tooltip:Hide()
+			-- Check if AchievementFrameSummary exists
+			if AchievementFrameSummary then
+				AchievementFrameSummary:HookScript("OnShow", function()
+					if not self._achievement then
+						-- Check if ACHIEVEMENTUI_MAX_SUMMARY_ACHIEVEMENTS and buttons exist
+						if ACHIEVEMENTUI_MAX_SUMMARY_ACHIEVEMENTS and AchievementFrameSummaryAchievements and AchievementFrameSummaryAchievements.buttons then
+							for i=1, ACHIEVEMENTUI_MAX_SUMMARY_ACHIEVEMENTS do
+								local button = AchievementFrameSummaryAchievements.buttons[i]
+								if button then
+									button:HookScript("OnEnter", function(_button)
+										self:OnAchievementSummary(_button)
+									end)
+									button:HookScript("OnLeave", function(_button)
+										if self.Tooltip:IsShown() then
+											self.Tooltip:Hide()
+										end
+									end)
+								end
+							end
 						end
-					end)
-				end
-				self._achievement = true
+						self._achievement = true
+					end
+				end)
 			end
 		end)
 	end)
 end
 
 function WoWJapanizerGameToolTip:OnAchievement(button)
-    if not WoWJapanizer.db.profile.achievement.tooltip then return end
+    if not WoWJapanizerX.db.profile.achievement.tooltip then return end
 
     local id, name, points, completed, month, day, year, description, flags, icon, rewardText = GetAchievementInfo(button.id)
 
@@ -73,11 +95,11 @@ function WoWJapanizerGameToolTip:OnAchievement(button)
 
     if achievement.title ~= "" then
         local player_name = UnitName("player")
-        text = text .. "\n|cffffffff" .. WoWJapanizer.L["TitleReward"] .. "|r\n" .. string.gsub(achievement.title, "<name>",  player_name)
+        text = text .. "\n|cffffffff" .. WoWJapanizerX.L["TitleReward"] .. "|r\n" .. string.gsub(achievement.title, "<name>",  player_name)
     end
 
-    if achievement.advice ~= "" and WoWJapanizer.db.profile.achievement.advice then
-        text = text .. "\n|cffffffff" .. WoWJapanizer.L["Advice"] .. "|r\n" .. string.gsub(achievement.advice, "\n", "")
+    if achievement.advice ~= "" and WoWJapanizerX.db.profile.achievement.advice then
+        text = text .. "\n|cffffffff" .. WoWJapanizerX.L["Advice"] .. "|r\n" .. string.gsub(achievement.advice, "\n", "")
     end
 
     self:AddText(text)
@@ -86,14 +108,14 @@ function WoWJapanizerGameToolTip:OnAchievement(button)
 end
 
 function WoWJapanizerGameToolTip:OnAchievementSummary(button)
-    if not WoWJapanizer.db.profile.achievement.tooltip then return end
+    if not WoWJapanizerX.db.profile.achievement.tooltip then return end
 
     local id, name, points, completed, month, day, year, description, flags, icon, rewardText = GetAchievementInfo(button.id)
 
     if completed then
         self:OnAchievement(button)
 --    else
---        self:AddText(WoWJapanizer.L["AchievementRequirements"])
+--        self:AddText(WoWJapanizerX.L["AchievementRequirements"])
 --        self:Resize(self.Tooltip:GetWidth() + 75, self.Tooltip:GetHeight() + 20)
     end
 end

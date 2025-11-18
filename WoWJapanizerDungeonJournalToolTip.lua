@@ -9,7 +9,7 @@ function WoWJapanizerDungeonJournalToolTip:OnEnable()
 		end)					
  
 		EncounterJournal.encounter:HookScript("OnHide", function()
-		    -- WoWJapanizer:DebugLog("WoWJapanizerDungeonJournalToolTip: OnHide");
+		    -- WoWJapanizerX:DebugLog("WoWJapanizerDungeonJournalToolTip: OnHide");
 			self:OnHide();
 		end)
 

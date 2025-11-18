@@ -63,7 +63,7 @@
                 </Texture>
             </Layer>
             <Layer level="ARTWORK">
-                <FontString name="WoWJapanizerQuestLogTitleText" inherits="GameFontNormal" text="WoWJapanizer">
+                <FontString name="WoWJapanizerQuestLogTitleText" inherits="GameFontNormal" text="WoWJapanizerX">
                     <Size>
                         <AbsDimension x="270" y="14"/>
                     </Size>

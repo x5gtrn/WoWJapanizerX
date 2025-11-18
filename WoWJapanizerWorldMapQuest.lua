@@ -7,7 +7,7 @@ function WoWJapanizerWorldMapQuest:OnInitialize()
     --self.WorldMapQuestScrollFrameHeight = WorldMapQuestScrollFrame:GetHeight()
     self.WorldMapScrollFrameHeight = WorldMapScrollFrame:GetHeight()
 
-    --self:SetChecked(WoWJapanizer.db.profile.quest.worldmap)
+    --self:SetChecked(WoWJapanizerX.db.profile.quest.worldmap)
 
 	hooksecurefunc("QuestMapFrame_ShowQuestDetails", function(questId)
         self.selected = questId
@@ -16,20 +16,20 @@ function WoWJapanizerWorldMapQuest:OnInitialize()
 end
 
 function WoWJapanizerWorldMapQuest:OnEnable()
-    WoWJapanizer:DebugLog("WoWJapanizerWorldMapQuest: OnEnable.");
+    WoWJapanizerX:DebugLog("WoWJapanizerWorldMapQuest: OnEnable.");
 end
 
 function WoWJapanizerWorldMapQuest:OnDisable()
-    WoWJapanizer:DebugLog("WoWJapanizerWorldMapQuest: OnDisable.");
+    WoWJapanizerX:DebugLog("WoWJapanizerWorldMapQuest: OnDisable.");
 end
 
 function WoWJapanizerWorldMapQuest:QuestInfo(questID)
 
-	if WoWJapanizer:isShowQuest() == false then
+	if WoWJapanizerX:isShowQuest() == false then
 		return 
 	end
 
-	WoWJapanizer:DebugLog("WoWJapanizerWorldMapQuest: " .. questID);
+	WoWJapanizerX:DebugLog("WoWJapanizerWorldMapQuest: " .. questID);
     --self:ShowDefault(questID)
     self:ShowOnMap(questID)
 

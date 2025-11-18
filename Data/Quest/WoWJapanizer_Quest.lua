@@ -5,7 +5,7 @@ function WoWJapanizer_Quest:Get(id)
         id = tostring(id)
     end
 
-	if WoWJapanizer.db.profile.quest.furigana then
+	if WoWJapanizerX.db.profile.quest.furigana then
 		if not self.FuriganaData[id] then
 			return nil
 		end
