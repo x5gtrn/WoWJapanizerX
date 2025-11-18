@@ -10,8 +10,9 @@ function WoWJapanizer:OnInitialize()
     self.version = C_AddOns.GetAddOnMetadata("WoWJapanizer", "Version")
     print(string.format("Welcome to WoWJapanizerX Ver: %s.\nSetting is /wjp or /WoWJapanizerX.", self.version))
 
-    self.db = LibStub('AceDB-3.0'):New("WoWJapanizerXDB")
-	self.db:RegisterDefaults({
+    -- Initialize AceDB-3.0 database with defaults
+    -- Using 'Default' as the default profile for consistency across characters
+    local defaults = {
         profile = {
             quest       = { questlog = true, gossip = true, questlog_movable = false, furigana = false },
             item        = { tooltip = true },
@@ -19,9 +20,11 @@ function WoWJapanizer:OnInitialize()
             achievement = { tooltip = true, advice = true },
             developer   = self.DEBUG,
             development = { debugger = self.DEBUG },
-			config      = {fontsize = 0, tooltip = true},
+            config      = { fontsize = 0, tooltip = true },
         }
-    })
+    }
+
+    self.db = LibStub("AceDB-3.0"):New("WoWJapanizerXDB", defaults, true)
 
     -- Quest --
     WoWJapanizerQuestLog:OnInitialize()

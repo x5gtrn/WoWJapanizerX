@@ -71,6 +71,7 @@ Available options:
 - Complete rewrite for WoW 11.x (The War Within)
 - New integrated Map & Quest Log UI support
 - Migrated to modern WoW APIs (C_QuestLog, C_AddOns, TooltipDataProcessor)
+- Updated Ace3 libraries to Release r1377 (October 2025) for WoW 11.x/12.0 compatibility
 - Added dynamic frame detection for better compatibility
 - Removed deprecated systems (Glyph, Artifact, Buff tooltips, World Map Quest)
 - Rebranded as WoWJapanizerX for a separate CurseForge release
@@ -153,7 +154,9 @@ We would like to express our deepest gratitude and respect to the following indi
 - **Community Testers** - Players who reported bugs, provided feedback, and helped improve the addon
 
 ### Libraries & Resources
-- **Ace3** - Embedded addon framework
+- **Ace3** (Release r1377, October 2025) - Embedded addon framework with WoW 11.x/12.0 support
+  - AceAddon-3.0, AceConfig-3.0, AceConsole-3.0, AceDB-3.0, AceGUI-3.0
+  - CallbackHandler-1.0, LibStub
 - **IPA Gothic UI Font** - Japanese font
 
 ## License
