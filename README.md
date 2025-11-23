@@ -67,7 +67,8 @@ Available options:
 
 ## Version History
 
-### 5.0.1
+### 0.4.19 (Development - Current)
+- **Note**: This is a development version. Version numbering starts at 0.4.19 to indicate early development stage.
 - Complete rewrite for WoW 11.x (The War Within)
 - New integrated Map & Quest Log UI support
 - Migrated to modern WoW APIs (C_QuestLog, C_AddOns, TooltipDataProcessor)
@@ -77,7 +78,7 @@ Available options:
 - Rebranded as WoWJapanizerX for a separate CurseForge release
 
 ### 4.19 (Legacy)
-- Last version supporting WoW 7.1.0 (Legion expansion)
+- Last version of original WoWJapanizer supporting WoW 7.1.0 (Legion expansion)
 - Original WoWJapanizer by milai
 
 ## Development
@@ -165,7 +166,7 @@ This project continues the work of the original WoWJapanizer addon. Please respe
 
 ## Links
 
-- [CurseForge](https://www.curseforge.com/wow/addons/wowjapanizerx) (coming soon)
+- [CurseForge](https://www.curseforge.com/wow/addons/wowjapanizerx)
 - [Original WoWJapanizer](https://www.curseforge.com/wow/addons/wowjapanizer) (legacy)
 - [Report Issues](https://github.com/x5gtrn/WoWJapanizerX/issues)
 
