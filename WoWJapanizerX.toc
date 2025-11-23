@@ -1,7 +1,7 @@
 ## Interface: 110205
 ## Title: WoWJapanizerX
 ## Notes: Translate Quest data, Item ToolTips and Spell ToolTips into Japanese text.
-## Version: 5.0.0
+## Version: 0.4.19
 ## Author: x5gtrn
 ## OptionalDeps: Ace3, LibStub, CallbackHandler
 ## SavedVariables: WoWJapanizerXDB
