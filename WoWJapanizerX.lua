@@ -14,13 +14,10 @@ function WoWJapanizerX:OnInitialize()
     -- Using 'Default' as the default profile for consistency across characters
     local defaults = {
         profile = {
-            quest       = { questlog = true, gossip = true, questlog_movable = false, furigana = false },
-            item        = { tooltip = true },
-            spell       = { tooltip = true },
-            achievement = { tooltip = true, advice = true },
+            quest       = { questlog = true, gossip = true, tooltip = true, questlog_movable = false, furigana = false },
             developer   = self.DEBUG,
             development = { debugger = self.DEBUG },
-            config      = { fontsize = 0, tooltip = true },
+            config      = { fontsize = 0 },
         }
     }
 
@@ -30,11 +27,8 @@ function WoWJapanizerX:OnInitialize()
     WoWJapanizerQuestLog:OnInitialize()
     WoWJapanizerQuestGossip:OnInitialize()
 
-    -- ToolTip --
-    WoWJapanizerGameToolTip:OnInitialize()
+    -- Quest ToolTip --
     WoWJapanizerItemRefTooltip:OnInitialize()
-
-    WoWJapanizerGarrisonToolTip:OnInitialize()
 
 end
 
@@ -48,11 +42,8 @@ function WoWJapanizerX:OnEnable()
     WoWJapanizerQuestLog:OnEnable()
     WoWJapanizerQuestGossip:OnEnable()
 
-    -- ToolTip --
-    WoWJapanizerGameToolTip:OnEnable()
+    -- Quest ToolTip --
     WoWJapanizerItemRefTooltip:OnEnable()
-
-	WoWJapanizerGarrisonToolTip:OnEnable()
 
 end
 
@@ -63,11 +54,8 @@ function WoWJapanizerX:OnDisable()
     WoWJapanizerQuestLog:OnDisable()
     WoWJapanizerQuestGossip:OnDisable()
 
-    -- ToolTip --
-    WoWJapanizerGameToolTip:OnDisable()
+    -- Quest ToolTip --
     WoWJapanizerItemRefTooltip:OnDisable()
-
-	WoWJapanizerGarrisonToolTip:OnDisable()
 
 end
 
@@ -84,7 +72,7 @@ function WoWJapanizerX:isShowQuest()
 end
 
 function WoWJapanizerX:isShowTooltip()
-	return self.db.profile.config.tooltip
+	return self.db.profile.quest.tooltip
 end
 
 function WoWJapanizerX:uc(str)
@@ -128,23 +116,20 @@ function WoWJapanizerX:SetupOptions()
 					fontSize = "medium",
 					order = 15,
 				},
-				ShowToolTip = {
+				ShowQuestToolTip = {
 					type = "toggle",
-					name = "Show Tool Tip",
+					name = "Show Quest Tool Tip",
 					order = 20,
 					set = function(info, value)
-						self.db.profile.config.tooltip = value;
-						self.db.profile.item.tooltip = value;
-						self.db.profile.spell.tooltip = value;
-						self.db.profile.achievement.tooltip = value;
+						self.db.profile.quest.tooltip = value;
 					end,
 					get = function(info)
-						return self.db.profile.config.tooltip;
+						return self.db.profile.quest.tooltip;
 					end,					
 				},
 				Spacer3 = {
 					type = "description",
-					name = "Show Japanese Tool Tip for Item/Spell/Achievement",
+					name = "Show Japanese Quest Tool Tip",
 					fontSize = "medium",
 					order = 25,
 				},
