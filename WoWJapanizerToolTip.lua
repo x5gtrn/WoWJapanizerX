@@ -3,10 +3,7 @@ WoWJapanizerToolTip.Tooltip = nil
 WoWJapanizerToolTip.Store = nil
 
 WoWJapanizerToolTip.TOOLTIP_NONE        = 0
-WoWJapanizerToolTip.TOOLTIP_ITEM        = 1
-WoWJapanizerToolTip.TOOLTIP_SPELL       = 2
-WoWJapanizerToolTip.TOOLTIP_QUEST       = 3
-WoWJapanizerToolTip.TOOLTIP_ACHIEVEMENT = 4
+WoWJapanizerToolTip.TOOLTIP_QUEST       = 1
 
 function WoWJapanizerToolTip:New(base)
     local obj = {}
@@ -52,70 +49,6 @@ end
 
 function WoWJapanizerToolTip:Enable()
     WoWJapanizerX:DebugLog(self.base .. ":Enable");
-
-	-- Store self reference for closures
-	local tooltipObj = self
-
-	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, function(tooltip, data)
-		if tooltip ~= tooltipObj.Tooltip then
-			return
-		end
-
-		local name, link = tooltip:GetItem()
-		if not link then
-			return
-		end
-
-		local _, _, itemID = link:find("Hitem:(%d+):")
-		if not itemID then
-			return
-		end
-
-		tooltipObj:DebugPrint('ITEM', itemID, name, tooltipObj.Tooltip)
-
-		if WoWJapanizerX.db.profile.item.tooltip then
-			local item = WoWJapanizer_Item:Get(itemID)
-			if item then
-				tooltipObj.selected.type = tooltipObj.TOOLTIP_ITEM
-				tooltipObj:AddText(item.text)
-			end
-		end
-
-		tooltipObj:DeveloperText("ItemID", itemID)
-	end)
-
-	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Spell, function(tooltip, data)
-		if tooltip ~= tooltipObj.Tooltip then
-			return
-		end
-
-		local spellName, spellRank, spellID = tooltip:GetSpell()
-		if not spellID then
-			return
-		end
-
-		tooltipObj:DebugPrint('SPELL', spellID, spellName, tooltipObj.Tooltip)
-
-		if WoWJapanizerX.db.profile.spell.tooltip then
-			if not tooltipObj:CheckEnhancedTooltips() then
-				tooltipObj:AddText(WoWJapanizerX.L.NotEnhancedTooltips)
-				return
-			end
-
-			local spell = WoWJapanizer_Spell:GetTooltipText(spellID, tooltipObj.Tooltip)
-			if spell then
-				tooltipObj.selected.type = tooltipObj.TOOLTIP_SPELL
-				if spell.next == nil then
-					tooltipObj:AddText(spell.text)
-				else
-					tooltipObj:AddText(spell.text .. "\n|cffffffff" .. WoWJapanizerX.L["NextRank"] .. "|r\n" .. spell.next)
-				end
-			end
-		end
-
-		tooltipObj:DeveloperText("SpellID", spellID)
-	end)
-
 end
 
 function WoWJapanizerToolTip:AddText(text)
@@ -186,14 +119,6 @@ function WoWJapanizerToolTip:AddSeparator()
 end
 
 function WoWJapanizerToolTip:Resize(width, height)
-end
-
-function WoWJapanizerToolTip:CheckEnhancedTooltips()
-    if tonumber(GetCVar("UberTooltips")) == 1 then
-        return true
-    else
-        return false
-    end
 end
 
 function WoWJapanizerToolTip:DebugPrint(base, id, name, tooltip)

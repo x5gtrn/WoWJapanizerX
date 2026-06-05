@@ -14,15 +14,13 @@ function WoWJapanizerItemRefTooltip:OnInitialize()
         tooltipObj:OnQuest()
     end)
 
-    TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Achievement, function(tooltip, data)
-        if tooltip ~= tooltipObj.Tooltip then
-            return
-        end
-        tooltipObj:OnAchievement()
-    end)
 end
 
 function WoWJapanizerItemRefTooltip:OnQuest()
+    if not WoWJapanizerX.db.profile.quest.tooltip then
+        return
+    end
+
     local questID = WoWJapanizer_Quest:GetID_ItemRefTooltip(self.Tooltip)
 
     if questID == 0 then
@@ -113,48 +111,5 @@ function WoWJapanizerItemRefTooltip:OnQuest()
     self:DeveloperText("QuestID", questID)
 end
 
-function WoWJapanizerItemRefTooltip:OnAchievement()
-    if not WoWJapanizerX.db.profile.achievement.tooltip then return end
-
-    local achievementID = WoWJapanizer_Achievement:GetID_ItemRefTooltip(self.Tooltip)
-
-    if achievementID == 0 then
-        return
-    end
-
-    local achievement = WoWJapanizer_Achievement:Get(achievementID)
-
-    if not achievement then
-        return
-    end
-
-    self.selected.type  = self.TOOLTIP_ACHIEVEMENT
-
-    self:AddSeparator()
-    self:AddText(achievement.text)
-    self:DeveloperText("AchievementID", achievementID)
-end
-
 function WoWJapanizerItemRefTooltip:Resize(width, height)
-    if self.selected.type == self.TOOLTIP_ACHIEVEMENT then
-        if width > 350 then
-            local target = _G[self.Tooltip:GetName() .. "TextLeft1"]
-            local h = height
-            local w = math.floor(target:GetWidth())
-            if w < 350 then w = 350 end
-
-            for i=2, self.Tooltip:NumLines() do
-                target = _G[self.Tooltip:GetName() .. "TextRight" .. i]
-                if math.floor(target:GetWidth()) == 1 then
-                    target = _G[self.Tooltip:GetName() .. "TextLeft" .. i]
-                    h = h - target:GetHeight()
-                    target:SetWidth(w)
-                    h = h + target:GetHeight()
-                end
-            end
-
-            self.Tooltip:SetWidth(w + 20)
-            self.Tooltip:SetHeight(h)
-        end
-    end
 end
